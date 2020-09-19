@@ -1,0 +1,13 @@
+{
+  "name": "com.noki.basics",
+  "version": "1.0.0",
+  "displayName": "Basic Extension",
+  "description": "Includes unity essesntials",
+  "unity": "2019.4",
+  "keywords": [
+    "AudioManager",
+    "SaveSystem",
+    "Extension"
+  ],
+  "type": "library"
+}
