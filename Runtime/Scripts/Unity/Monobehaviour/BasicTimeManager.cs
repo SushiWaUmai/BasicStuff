@@ -11,6 +11,10 @@ namespace Basics
         #region Variables
 
         private static BasicTimeManager instance;
+
+        /// <summary>
+        /// Singleton of the TimeManager
+        /// </summary>
         public static BasicTimeManager Instance
         {
             get
@@ -23,8 +27,14 @@ namespace Basics
             }
         }
 
-        public bool dontDestroyOnLoad = true;
-        public bool stopCorutineOnLoad = false;
+        [SerializeField, Tooltip("Defines whether the AudioManager should be destroyed on scene change")]
+        private bool dontDestroyOnLoad = true;
+
+        /// <summary>
+        /// Defines whether the TimeManager should reset the coroutines on scene change
+        /// </summary>
+        [Tooltip("Defines whether the TimeManager should reset the coroutines on scene change")]
+        public bool stopCoroutinesOnLoad = false;
 
         #endregion
 
@@ -51,20 +61,73 @@ namespace Basics
 
         private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
         {
-            if (stopCorutineOnLoad)
+            if (stopCoroutinesOnLoad)
                 StopAllCoroutines();
         }
 
+        /// <summary>
+        /// Waits a certain amount of seconds before calling action
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public Coroutine Wait(float time, Action action) => StartCoroutine(Count(time, action));
+
+        /// <summary>
+        /// Waits a certain amount of real time seconds before calling action
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public Coroutine WaitInRealTime(float time, Action action) => StartCoroutine(CountInRealTime(time, action));
+
+        /// <summary>
+        /// Waits until the next PhysicsUpdate has passed
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public Coroutine WaitForPhysicsUpdate(Action action) => StartCoroutine(PhysicsUpdateWait(action));
+
+        /// <summary>
+        /// Waits until the end of the frame
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public Coroutine WaitForEndFrame(Action action) => StartCoroutine(EndFrameWait(action));
+
+        /// <summary>
+        /// Waits until the next frame
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public Coroutine WaitForNextFrame(Action action) => StartCoroutine(SkipFrame(action));
 
+        /// <summary>
+        /// Waits a certain amount of seconds before calling action
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public Coroutine Wait<T>(float time, T input, Action<T> action) => StartCoroutine(Count(time, input, action));
+
+        /// <summary>
+        /// Waits a certain amount of real time seconds before calling action
+        /// </summary>
         public Coroutine WaitInRealTime<T>(float time, T input, Action<T> action) => StartCoroutine(CountInRealTime(time, input, action));
+
+        /// <summary>
+        /// Waits until the next PhysicsUpdate has passed
+        /// </summary>
         public Coroutine WaitForPhysicsUpdate<T>(Action<T> action, T input) => StartCoroutine(PhysicsUpdateWait(action, input));
+
+        /// <summary>
+        /// Waits until the end of the frame
+        /// </summary>
         public Coroutine WaitForEndFrame<T>(Action<T> action, T input) => StartCoroutine(EndFrameWait(action, input));
+
+        /// <summary>
+        /// Waits until the next frame
+        /// </summary>
         public Coroutine WaitForNextFrame<T>(Action<T> action, T input) => StartCoroutine(SkipFrame<T>(action, input));
 
 

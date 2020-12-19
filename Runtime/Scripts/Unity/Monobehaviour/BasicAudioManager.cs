@@ -10,7 +10,8 @@ namespace Basics
     {
         #region Variables
 
-        [SerializeField] private AudioMixerGroup[] audioMixerGroups;
+        [SerializeField, Tooltip("All Audio Mixer Groups in the Game")]
+        private AudioMixerGroup[] audioMixerGroups;
 
         /// <summary>
         /// Defines whether the AudioManager should reset the audio on scene change
