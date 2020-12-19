@@ -10,16 +10,18 @@ namespace Basics
     {
         #region Variables
 
-        public enum AudioType { Master, Music, SFX }
+        [SerializeField] private AudioMixerGroup[] audioMixerGroups;
 
-        [SerializeField] private AudioMixerGroup Master;
-        [SerializeField] private AudioMixerGroup Music;
-        [SerializeField] private AudioMixerGroup SFX;
-
+        /// <summary>
+        /// Defines whether the AudioManager should reset the audio on scene change
+        /// </summary>
+        [Tooltip("Defines whether the AudioManager should reset the audio on scene change")]
         public bool resetAudioOnLoad = true;
-        public bool dontDestroyOnLoad = true;
 
-        public static BasicAudioManager instance;
+        [SerializeField, Tooltip("Defines whether the AudioManager should be destroyed on scene change")]
+        private bool dontDestroyOnLoad = true;
+
+        private static BasicAudioManager instance;
         public static BasicAudioManager Instance
         {
             get
@@ -73,10 +75,10 @@ namespace Basics
                 StopAllAudio();
         }
 
-        public AudioSource PlaySound(AudioType type, AudioClip clip, float volume = 0.5f)
+        public AudioSource PlaySound(int audioMixerIndex, AudioClip clip, float volume = 0.5f)
         {
             AudioSource source = CreateAudioSource(clip, volume);
-            source.outputAudioMixerGroup = GetAudioType(type);
+            source.outputAudioMixerGroup = audioMixerGroups[audioMixerIndex];
             source.Play();
             Destroy(source.gameObject, clip.length);
             return source;
@@ -84,27 +86,27 @@ namespace Basics
 
         public AudioSource PlaySound(AudioClip clip)
         {
-            return PlaySound(AudioType.Master, clip);
+            return PlaySound(0, clip);
         }
 
         public AudioSource PlayRandomSound(params AudioClip[] clips)
         {
-            return PlayRandomSound(AudioType.Master, clips);
+            return PlayRandomSound(0, clips);
         }
 
-        public AudioSource PlayRandomSound(AudioType type, params AudioClip[] clips)
+        public AudioSource PlayRandomSound(int audioMixerIndex, params AudioClip[] clips)
         {
             AudioSource source = CreateAudioSource(clips[Random.Range(0, clips.Length)]);
-            source.outputAudioMixerGroup = GetAudioType(type);
+            source.outputAudioMixerGroup = audioMixerGroups[audioMixerIndex];
             source.Play();
             Destroy(source.gameObject, source.clip.length);
             return source;
         }
 
-        public AudioSource Play3DSound(AudioType type, AudioClip audio, Vector3 position, float minDistance = 1, float maxDistance = 1000, float volume = 0.5f)
+        public AudioSource Play3DSound(int audioMixerIndex, AudioClip audio, Vector3 position, float minDistance = 1, float maxDistance = 1000, float volume = 0.5f)
         {
             AudioSource source = CreateAudioSource(audio, volume);
-            source.outputAudioMixerGroup = GetAudioType(type);
+            source.outputAudioMixerGroup = audioMixerGroups[audioMixerIndex];
             source.transform.position = position;
             source.spatialBlend = 1;
             source.rolloffMode = AudioRolloffMode.Linear;
@@ -115,16 +117,16 @@ namespace Basics
             return source;
         }
 
-        public AudioSource PlayRandom3DSound(AudioType type, AudioClip[] audio, Vector3 position, float minDistance, float maxDistance)
+        public AudioSource PlayRandom3DSound(int audioMixerIndex, AudioClip[] audio, Vector3 position, float minDistance, float maxDistance)
         {
-            return Play3DSound(type, audio[Random.Range(0, audio.Length)], position, minDistance, maxDistance);
+            return Play3DSound(audioMixerIndex, audio[Random.Range(0, audio.Length)], position, minDistance, maxDistance);
         }
 
-        public AudioSource PlayLoopingSound(AudioType type, AudioClip audio, float volume = 0.5f)
+        public AudioSource PlayLoopingSound(int audioMixerIndex, AudioClip audio, float volume = 0.5f)
         {
             AudioSource source = CreateAudioSource(audio, volume);
             source.loop = true;
-            source.outputAudioMixerGroup = GetAudioType(type);
+            source.outputAudioMixerGroup = audioMixerGroups[audioMixerIndex];
             source.Play();
             return source;
         }
@@ -137,15 +139,14 @@ namespace Basics
             return source;
         }
 
-        public void ChangeAudioProperty(AudioType type, string propertyName, float set)
+        public void ChangeAudioProperty(int audioMixerIndex, string propertyName, float set)
         {
-            AudioMixerGroup group = GetAudioType(type);
-            group.audioMixer.SetFloat(propertyName, set);
+            audioMixerGroups[audioMixerIndex].audioMixer.SetFloat(propertyName, set);
         }
 
-        public void ChangeAudioVolume(AudioType type, string propertyName, float set)
+        public void ChangeAudioVolume(int audioMixerIndex, string propertyName, float set)
         {
-            ChangeAudioProperty(type, propertyName, Mathf.Log10(set) * 20);
+            ChangeAudioProperty(audioMixerIndex, propertyName, Mathf.Log10(set) * 20);
         }
 
         public void StopAllAudio()
@@ -166,23 +167,6 @@ namespace Basics
         {
             foreach (AudioSource s in AudioSources)
                 s.Play();
-        }
-
-        private AudioMixerGroup GetAudioType(AudioType type)
-        {
-            if (SFX != null && Music != null)
-            {
-                switch (type)
-                {
-                    case AudioType.Music:
-                        return Music;
-                    case AudioType.SFX:
-                        return SFX;
-                    case AudioType.Master:
-                        return Master;
-                }
-            }
-            return null;
         }
 
         private AudioSource CreateAudioSource(AudioClip clip, float volume = 0.5f)
@@ -209,6 +193,12 @@ namespace Basics
             Destroy(audioSource.gameObject);
         }
 
+        /// <summary>
+        /// Fades the Audio in
+        /// </summary>
+        /// <param name="audioSource"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
         private IEnumerator Fadein(AudioSource audioSource, float time)
         {
             while (audioSource.volume < 1)
