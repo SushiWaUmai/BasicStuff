@@ -9,6 +9,14 @@ namespace Basics
 {
     public static class BasicGizmosExtension
     {
+        /// <summary>
+        /// Draws a Ellipsoid in Editor Gizmos Window
+        /// </summary>
+        /// <param name="drawPos"></param>
+        /// <param name="drawRot"></param>
+        /// <param name="size"></param>
+        /// <param name="strokeSize"></param>
+        /// <param name="col"></param>
         public static void DrawEllipsoid(Vector3 drawPos, Quaternion drawRot, Vector3 size, float strokeSize, Color col)
         {
 #if UNITY_EDITOR
@@ -35,21 +43,20 @@ namespace Basics
 #endif
         }
 
+        /// <summary>
+        /// Draws a Wire Cube
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="size"></param>
+        /// <param name="rot"></param>
         public static void DrawWireCube(Vector3 pos, Vector3 size, Quaternion rot)
         {
 #if UNITY_EDITOR
+            Matrix4x4 orig = Gizmos.matrix;
             Gizmos.matrix = Matrix4x4.TRS(pos, rot, Vector3.one);
             Gizmos.DrawWireCube(Vector3.zero, size);
-            Gizmos.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+            Gizmos.matrix = orig;
 #endif
         }
-
-        //        public static void DrawRotationArc(Vector3 position, Quaternion from, Quaternion rotation, float radius)
-        //        {
-        //#if UNITY_EDITOR
-        //            rotation.ToAngleAxis(out float angle, out Vector3 axis);
-        //            Handles.DrawWireArc(position, axis, from * Vector3.forward, angle, radius);
-        //#endif
-        //        }
     }
 }

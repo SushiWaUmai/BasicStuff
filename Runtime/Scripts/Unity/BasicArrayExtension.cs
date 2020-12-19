@@ -125,7 +125,7 @@ namespace Basics
         }
 
         /// <summary>
-        /// Check for following condition foreach element in array
+        /// Check for following condition for each element in array
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -288,6 +288,12 @@ namespace Basics
             return result;
         }
 
+        /// <summary>
+        /// Converts a two dimentional array to a one dimentional array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
         public static T[] ToOneDimensionalArray<T>(this T[,] array)
         {
             T[] result = new T[array.Length];
@@ -303,11 +309,23 @@ namespace Basics
             return result;
         }
 
+        /// <summary>
+        /// creates a range array
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public static int[] Range(int size)
         {
             return Range(0, size);
         }
 
+        /// <summary>
+        /// Creates a range array
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="size"></param>
+        /// <param name="steps"></param>
+        /// <returns></returns>
         public static int[] Range(int start, int size, int steps = 1)
         {
             int[] result = new int[size];
