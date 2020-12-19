@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Basics
 {
     public class BasicTimeManager : MonoBehaviour
     {
+        #region Variables
+
         private static BasicTimeManager instance;
         public static BasicTimeManager Instance
         {
@@ -23,6 +26,10 @@ namespace Basics
         public bool dontDestroyOnLoad = true;
         public bool stopCorutineOnLoad = false;
 
+        #endregion
+
+        #region MonoBehaviour Methods
+
         private void Awake()
         {
             if(instance != null)
@@ -32,12 +39,21 @@ namespace Basics
             }
             if (dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
-            if (stopCorutineOnLoad)
-                StopAllCoroutines();
             instance = this;
         }
 
+        private void OnEnable() => SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        private void OnDisable() => SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+
+        #endregion
+
         #region Methods
+
+        private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+        {
+            if (stopCorutineOnLoad)
+                StopAllCoroutines();
+        }
 
         public Coroutine Wait(float time, Action action) => StartCoroutine(Count(time, action));
         public Coroutine WaitInRealTime(float time, Action action) => StartCoroutine(CountInRealTime(time, action));

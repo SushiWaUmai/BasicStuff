@@ -37,7 +37,6 @@ namespace Basics
             return Quaternion.Dot(val, about) > 1f - range;
         }
 
-
         public static Vector3 Abs(this Vector3 val)
         {
             return new Vector3(Mathf.Abs(val.x), Mathf.Abs(val.y), Mathf.Abs(val.z));
@@ -57,7 +56,6 @@ namespace Basics
             else if (dir.z != 0)
                 return val.z;
 
-            Debug.LogWarning("Direction was Vector3.zero which is not a direction");
             return float.NaN;
         }
 
@@ -71,13 +69,6 @@ namespace Basics
                 result[i] = val[i] / sum;
 
             return result;
-        }
-
-        public static float[] SoftMax(this float[] val)
-        {
-            float denominator = val.Sum(x => Mathf.Exp(x));
-
-            return val.Map(x => Mathf.Exp(x) / denominator);
         }
     }
 }

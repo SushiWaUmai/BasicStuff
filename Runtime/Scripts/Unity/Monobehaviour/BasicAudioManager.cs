@@ -1,12 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 
 namespace Basics
 {
     public class BasicAudioManager : MonoBehaviour
     {
+        #region Variables
+
+        public enum AudioType { Master, Music, SFX }
+
+        [SerializeField] private AudioMixerGroup Master;
+        [SerializeField] private AudioMixerGroup Music;
+        [SerializeField] private AudioMixerGroup SFX;
+
+        public bool resetAudioOnLoad = true;
+        public bool dontDestroyOnLoad = true;
+
         public static BasicAudioManager instance;
         public static BasicAudioManager Instance
         {
@@ -31,12 +43,10 @@ namespace Basics
                 return result;
             }
         }
-        public bool resetAudio = true;
-        public bool dontDestroyOnLoad = true;
 
-        [SerializeField] private AudioMixerGroup Master;
-        [SerializeField] private AudioMixerGroup SFX;
-        [SerializeField] private AudioMixerGroup Music;
+        #endregion
+
+        #region MonoBehaviour Methods
 
         private void Awake()
         {
@@ -50,11 +60,16 @@ namespace Basics
             instance = this;
         }
 
-        public enum AudioType { Master, Music, SFX }
+        private void OnEnable() => SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        private void OnDisable() => SceneManager.sceneLoaded -= OnLevelFinishedLoading;
 
-        private void OnLevelWasLoaded(int level)
+        #endregion
+
+        #region Methods
+
+        private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
         {
-            if (resetAudio)
+            if (resetAudioOnLoad)
                 StopAllAudio();
         }
 
@@ -204,5 +219,7 @@ namespace Basics
 
             Destroy(audioSource.gameObject);
         }
+
+        #endregion
     }
 }
