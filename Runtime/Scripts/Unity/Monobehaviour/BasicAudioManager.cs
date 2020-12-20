@@ -91,12 +91,14 @@ namespace Basics
         /// <param name="clip"></param>
         /// <param name="volume"></param>
         /// <returns></returns>
-        public AudioSource PlaySound(int audioMixerIndex, AudioClip clip, float volume = 0.5f)
+        public AudioSource PlaySound(int audioMixerIndex, AudioClip clip, bool loop = false, float volume = 0.5f)
         {
             AudioSource source = CreateAudioSource(clip, volume);
             source.outputAudioMixerGroup = audioMixerGroups[audioMixerIndex];
+            source.loop = loop;
             source.Play();
-            Destroy(source.gameObject, clip.length);
+            if(!loop)
+                Destroy(source.gameObject, clip.length);
             return source;
         }
 
@@ -144,7 +146,7 @@ namespace Basics
         /// <param name="minDistance"></param>
         /// <param name="maxDistance"></param>
         /// <returns></returns>
-        public AudioSource Play3DSound(int audioMixerIndex, AudioClip audio, Vector3 position, float minDistance = 1, float maxDistance = 1000, float volume = 0.5f)
+        public AudioSource Play3DSound(int audioMixerIndex, AudioClip audio, Vector3 position, float minDistance = 1, float maxDistance = 1000, bool loop = false, float volume = 0.5f)
         {
             AudioSource source = CreateAudioSource(audio, volume);
             source.outputAudioMixerGroup = audioMixerGroups[audioMixerIndex];
@@ -153,8 +155,10 @@ namespace Basics
             source.rolloffMode = AudioRolloffMode.Linear;
             source.minDistance = minDistance;
             source.maxDistance = maxDistance;
+            source.loop = loop;
             source.Play();
-            Destroy(source.gameObject, audio.length);
+            if(!loop)
+                Destroy(source.gameObject, audio.length);
             return source;
         }
 
@@ -170,35 +174,6 @@ namespace Basics
         public AudioSource PlayRandom3DSound(int audioMixerIndex, AudioClip[] audio, Vector3 position, float minDistance, float maxDistance)
         {
             return Play3DSound(audioMixerIndex, audio[Random.Range(0, audio.Length)], position, minDistance, maxDistance);
-        }
-
-        /// <summary>
-        /// Plays a looping sound on a certain AudioMixerGroup
-        /// </summary>
-        /// <param name="audioMixerIndex"></param>
-        /// <param name="audio"></param>
-        /// <param name="volume"></param>
-        /// <returns></returns>
-        public AudioSource PlayLoopingSound(int audioMixerIndex, AudioClip audio, float volume = 0.5f)
-        {
-            AudioSource source = CreateAudioSource(audio, volume);
-            source.loop = true;
-            source.outputAudioMixerGroup = audioMixerGroups[audioMixerIndex];
-            source.Play();
-            return source;
-        }
-
-        /// <summary>
-        /// Plays a looping sound
-        /// </summary>
-        /// <param name="audio"></param>
-        /// <returns></returns>
-        public AudioSource PlayLoopingSound(AudioClip audio)
-        {
-            AudioSource source = CreateAudioSource(audio);
-            source.loop = true;
-            source.Play();
-            return source;
         }
 
         /// <summary>
