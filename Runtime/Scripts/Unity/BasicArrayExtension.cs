@@ -149,51 +149,13 @@ namespace Basics
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static string ArrayToString(this object[] input)
+        public static string ArrayToString<T>(this T[] input)
         {
             string result = "{ ";
 
             for (int i = 0; i < input.Length; i++)
             {
                 if (i != input.Length - 1) result += input[i].ToString() + ", ";
-                else result += input[i];
-            }
-
-            result += " }";
-            return result;
-        }
-
-        /// <summary>
-        /// Returns a appropriate string from array
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static string ArrayToString(this double[] input)
-        {
-            string result = "{ ";
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (i != input.Length - 1) result += input[i] + ", ";
-                else result += input[i];
-            }
-
-            result += " }";
-            return result;
-        }
-
-        /// <summary>
-        /// Returns a appropriate string from array
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static string ArrayToString(this float[] input)
-        {
-            string result = "{ ";
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (i != input.Length - 1) result += input[i] + ", ";
                 else result += input[i];
             }
 
