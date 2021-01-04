@@ -39,7 +39,7 @@ namespace Basics
         /// <summary>
         /// Defines wheter the TimeManager Instance Exists in the Scene
         /// </summary>
-        public bool InstanceExists => instance != null;
+        public static bool InstanceExists => instance != null;
 
         #endregion
 
