@@ -36,6 +36,11 @@ namespace Basics
         [Tooltip("Defines whether the TimeManager should reset the coroutines on scene change")]
         public bool stopCoroutinesOnLoad = false;
 
+        /// <summary>
+        /// Defines wheter the TimeManager Instance Exists in the Scene
+        /// </summary>
+        public bool InstanceExists => instance != null;
+
         #endregion
 
         #region MonoBehaviour Methods
