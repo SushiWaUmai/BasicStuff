@@ -28,7 +28,7 @@ public abstract class BasicSingleton<T> : MonoBehaviour where T : MonoBehaviour
     /// </summary>
     public static bool InstanceExists => instance != null;
 
-    private void Awake()
+    private void Start()
     {
         if(instance == null)
         {
