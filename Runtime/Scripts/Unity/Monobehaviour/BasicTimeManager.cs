@@ -6,29 +6,9 @@ using UnityEngine.SceneManagement;
 
 namespace Basics
 {
-    public class BasicTimeManager : MonoBehaviour
+    public class BasicTimeManager : BasicSingleton<BasicTimeManager>
     {
         #region Variables
-
-        private static BasicTimeManager instance;
-
-        /// <summary>
-        /// Singleton of the TimeManager
-        /// </summary>
-        public static BasicTimeManager Instance
-        {
-            get
-            {
-                if(instance == null)
-                {
-                    return new GameObject("BasicTimeManager").AddComponent<BasicTimeManager>();
-                }
-                return instance;
-            }
-        }
-
-        [SerializeField, Tooltip("Defines whether the AudioManager should be destroyed on scene change")]
-        private bool dontDestroyOnLoad = true;
 
         /// <summary>
         /// Defines whether the TimeManager should reset the coroutines on scene change
@@ -36,26 +16,9 @@ namespace Basics
         [Tooltip("Defines whether the TimeManager should reset the coroutines on scene change")]
         public bool stopCoroutinesOnLoad = false;
 
-        /// <summary>
-        /// Defines wheter the TimeManager Instance Exists in the Scene
-        /// </summary>
-        public static bool InstanceExists => instance != null;
-
         #endregion
 
         #region MonoBehaviour Methods
-
-        private void Awake()
-        {
-            if(instance != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            if (dontDestroyOnLoad)
-                DontDestroyOnLoad(gameObject);
-            instance = this;
-        }
 
         private void OnEnable() => SceneManager.sceneLoaded += OnLevelFinishedLoading;
         private void OnDisable() => SceneManager.sceneLoaded -= OnLevelFinishedLoading;
